@@ -5,11 +5,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 import com.exercise.recyclerview.databinding.ActivityUserBinding
 
 
 class UserActivity : AppCompatActivity(){
     private lateinit var binding: ActivityUserBinding
+    private lateinit var viewModel: UserViewModel
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +19,7 @@ class UserActivity : AppCompatActivity(){
         binding = ActivityUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        viewModel = ViewModelProvider(this)[UserViewModel::class.java]
         val userToUpdate: Users? = intent.getParcelableExtra("USER",Users::class.java)
 
         binding.tvName.setText(userToUpdate?.name)
@@ -32,6 +35,7 @@ class UserActivity : AppCompatActivity(){
             val resultIntent = Intent()
             resultIntent.putExtra("UPDATED_USER", updatedUser)
             setResult(RESULT_OK, resultIntent)
+            viewModel.updateUser(updatedUser)
             finish()
         }
 
